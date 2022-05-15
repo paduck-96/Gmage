@@ -5,3 +5,7 @@
 /src : 서버측 컴파일 파일
 /public: 정적 웹 컨텐츠
 /models : DB 모델
+
+[] Client
+[] Server
+[] Pug
