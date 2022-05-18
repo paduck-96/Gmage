@@ -41,7 +41,7 @@ function clean() {
 function scripts() {
   return gulp.src(routes.js.src).pipe(babel()).pipe(gulp.dest(routes.js.dest));
 } //js파일 dest로 babel(최신화)
-/* function views() {
+function views() {
   return gulp.src(routes.pug.src).pipe(pug()).pipe(gulp.dest(routes.pug.dest));
 } //pug파일 dest로 변환 */
 function styles() {
@@ -61,16 +61,16 @@ function styles() {
 //실시간 반영
 function change() {
   gulp.watch(routes.js.watch, scripts);
-  /* gulp.watch(routes.pug.watch, views); */
+  gulp.watch(routes.pug.watch, views);
   gulp.watch(routes.style.watch, styles);
 }
 function modify() {
-  return nodemon({ script: process.cwd() + "/src/init.js" });
-}
+  return nodemon({ script: process.cwd() + "/src/server.js" });
+} //ignore 옵션 넣어주기
 
 export const build = gulp.series(
   clean,
-  gulp.series(scripts, /* views, */ styles),
+  gulp.series(scripts, views, styles),
   modify,
   change
 );

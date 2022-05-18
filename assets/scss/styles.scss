@@ -1,5 +1,23 @@
-$color: beige;
+@import "variables";
+@import "reset";
+@import "login";
+
+* {
+  box-sizing: border-box;
+}
+
+button:focus {
+  outline: none;
+}
+
+html {
+  height: 100%;
+}
 
 body {
-  background-color: $color;
+  background-color: $greyColor;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
 }
