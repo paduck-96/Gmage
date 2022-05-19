@@ -65,7 +65,7 @@ function change() {
   gulp.watch(routes.style.watch, styles);
 }
 function modify() {
-  return nodemon({ script: process.cwd() + "/src/server.js" });
+  return nodemon({ script: process.cwd() + "/src/init.js" });
 } //ignore 옵션 넣어주기
 
 export const build = gulp.series(

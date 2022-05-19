@@ -2,12 +2,21 @@ extends base
 block content 
     header 
         nav 
-            ul 
-                li
-                    a(href="/login") 로그인
-                li
-                    a(href="/signup") 회원가입
+            ul
+                li 
+                    a(href="/") 홈
+                if !loggedIn
+                    li
+                        a(href="/login") 로그인
+                else 
+                    a(href="/logout") 로그아웃
+                    a(href="#")
+                        button #{loggedInUser.nickname}프로필 
     main 
         h1 실시간 그림 맞추기 게임입니다
         h4 갈틱폰이랄까요?
+        if loggedIn 
+            div 
+                a(href="/game") 
+                    button 게임 참여 
     
