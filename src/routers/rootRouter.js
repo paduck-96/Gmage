@@ -15,5 +15,9 @@ rootRouter.get("/login", login);
 rootRouter.route("/login/start").get(startKakaoLogin);
 rootRouter.route("/login/finish").get(finishKakaoLogin);
 rootRouter.get("/logout", kakaoLogout);
-
+/*
+rootRouter.get("/game", (req, res) => {
+  res.render("game");
+});
+*/
 export default rootRouter;

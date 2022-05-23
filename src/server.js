@@ -6,7 +6,6 @@ import session from "express-session";
 import rootRouter from "./routers/rootRouter.js";
 import userRouter from "./routers/userRouter.js";
 import gameRouter from "./routers/gameRouter.js";
-import socketController from "./socketControllers.js";
 import { localsMiddleware } from "./middlewares.js";
 
 //server 연결시키기
@@ -31,11 +30,7 @@ app.use(
 );
 app.use(localsMiddleware);
 app.use("/", rootRouter);
-app.use("/users", userRouter);
 app.use("/game", gameRouter);
+app.use("/users", userRouter);
 
 export default app;
-
-app.get("/game", (req, res) => {
-  res.render("game");
-});

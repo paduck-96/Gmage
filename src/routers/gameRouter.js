@@ -1,7 +1,10 @@
 import express from "express";
+//import { home } from "../controllers/gameControllers.js";
 
-const gameRotuer = express.Router();
+const gameRouter = express.Router();
 
-gameRotuer.get("/game");
+gameRouter.get("/game", (req, res) => {
+  res.render("game");
+});
 
-export default gameRotuer;
+export default gameRouter;

@@ -2,6 +2,6 @@ import express from "express";
 
 const userRouter = express.Router();
 
-userRouter.get("/game");
+userRouter.get("/users");
 
 export default userRouter;
