@@ -18,7 +18,7 @@ app.set("views", process.cwd() + "/src/views");
 //express 설정
 //미들웨어 설정
 app.use(morgan("dev"));
-app.use(express.static(process.cwd() + "/src/static"));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
@@ -29,6 +29,7 @@ app.use(
   })
 );
 app.use(localsMiddleware);
+app.use(express.static(process.cwd() + "/src/static"));
 app.use("/", rootRouter);
 app.use("/game", gameRouter);
 app.use("/users", userRouter);

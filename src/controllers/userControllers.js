@@ -49,7 +49,6 @@ export const finishKakaoLogin = async (req, res) => {
       })
     ).json();
     let user = await User.findOne({ user_id: userRequest.id });
-    console.log(user);
     if (!user) {
       user = await User.create({
         user_id: userRequest.id,
@@ -61,6 +60,9 @@ export const finishKakaoLogin = async (req, res) => {
       req.session.user = user;
       return res.redirect("/");
     }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect("/");
   } else {
     return res.redirect("/");
   }
@@ -75,4 +77,5 @@ export const kakaoLogout = async (req, res) => {
   const params = new URLSearchParams(options).toString();
   const finalUrl = `${baseUrl}?${params}`;
   return res.redirect(finalUrl);
+  req.session.destroy();
 };
