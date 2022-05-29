@@ -4,19 +4,17 @@ block content
         h4 게임 페이지입니다!
         if loggedInUser
             h6 #{loggedInUser.nickname}님 반갑습니다!
-    div#jsNotifications
-    div#gameRoom
-        form(action="")
-            input(type="text", placeholder="참여하려는 방 이름 입력...")
-        .roomContainer
-            ul.roomList
-    
-    .gameContainer
+            a(href="/logout") 로그아웃
+
+    .gameContainer#jsGame
         .main 
-            #notify 
-            canvas.canvas 
-            .controls
-                button Fill
+            #jsNotifs
+            div#jsAnswer
+            form.word__form#jsWord
+                input(type="text", placeholder="단어 설정")
+            canvas.canvas#jsCanvas
+            .controls#jsControls
+                button#jsMode Fill
                 .colors 
                     .color.jsColor(style="background-color:rgb(0,0,0)")
                     .color.jsColor(style="background-color:rgb(255,255,255)")
@@ -27,8 +25,9 @@ block content
                     .color.jsColor(style="background-color:rgb(90,200,250)")
                     .color.jsColor(style="background-color:rgb(0,122,255)")
                     .color.jsColor(style="background-color:rgb(88,86,214)")
+                input(type="range", step="0.5", min="0", max="5")#lineWidth
             .chat
-                .player__board 
+                .player__board#jsBoard
                 ul.chat__messages#jsMessages
                 form.chat__form#jsSendMsg
                     input(type="text", placeholder="메시지 입력...") 

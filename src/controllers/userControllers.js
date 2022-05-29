@@ -9,7 +9,7 @@ export const startKakaoLogin = (req, res) => {
   try {
     const baseUrl = "https://kauth.kakao.com/oauth/authorize";
     const options = {
-      client_id: "18913573bd020281e3ba3a33d057574d",
+      client_id: process.env.CLIENT_ID,
       redirect_uri: "http://localhost:5000/login/finish",
       response_type: "code",
     };
@@ -23,8 +23,8 @@ export const startKakaoLogin = (req, res) => {
 export const finishKakaoLogin = async (req, res) => {
   const baseUrl = "https://kauth.kakao.com/oauth/token";
   const options = {
-    client_id: "18913573bd020281e3ba3a33d057574d",
-    client_secret: "ohBwscNYAEe79QWToZuipSFsHPgMYhuc",
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
     grant_type: "authorization_code",
     redirect_uri: "http://localhost:5000/login/finish",
     code: req.query.code,
@@ -69,13 +69,13 @@ export const finishKakaoLogin = async (req, res) => {
 };
 
 export const kakaoLogout = async (req, res) => {
+  req.session.destroy();
   const baseUrl = "https://kauth.kakao.com/oauth/logout";
   const options = {
-    client_id: "18913573bd020281e3ba3a33d057574d",
+    client_id: process.env.CLIENT_ID,
     logout_redirect_uri: "http://localhost:5000/",
   };
   const params = new URLSearchParams(options).toString();
   const finalUrl = `${baseUrl}?${params}`;
   return res.redirect(finalUrl);
-  req.session.destroy();
 };

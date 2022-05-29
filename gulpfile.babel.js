@@ -7,10 +7,25 @@ import scss from "sass";
 import nodemon from "gulp-nodemon";
 import autoprefixer from "gulp-autoprefixer";
 import minifyCss from "gulp-csso";
+import bro from "gulp-bro";
+import bbel from "babelify";
 
 const sass = gulpsass(scss);
 
 const routes = {
+  babel1: {
+    src: "models/*.js",
+    dest: "src/static/models",
+  },
+  babel2: {
+    src: "src/*.js",
+    dest: "src/static",
+  },
+  babel3: {
+    src: "src/routers/*.js",
+    dest: "src/static/routers",
+  },
+  babel4: { src: "src/controllers/*.js", dest: "src/static/controllers" },
   js: {
     src: "assets/js/main.js",
     dest: "src/static/js",
@@ -23,7 +38,7 @@ const routes = {
   },
   pug: {
     src: "src/views/**/*.pug",
-    dest: "build/views",
+    dest: "src/static/views",
     watch: "src/views/**/*.pug",
   },
 };
@@ -40,6 +55,18 @@ function clean() {
 //file 정리
 function scripts() {
   return gulp.src(routes.js.src).pipe(babel()).pipe(gulp.dest(routes.js.dest));
+  /* return gulp
+    .src(routes.js.src)
+    .pipe(
+      bro({
+        transform: [
+          bbel.configure({ presets: ["@babel/preset-env"] }),
+          ["uglifyify", { global: true }],
+        ],
+      })
+    )
+    .pipe(gulp.dest(routes.js.dest));
+    */
 } //js파일 dest로 babel(최신화)
 function views() {
   return gulp.src(routes.pug.src).pipe(pug()).pipe(gulp.dest(routes.pug.dest));
@@ -50,7 +77,6 @@ function styles() {
     .pipe(sass())
     .pipe(
       autoprefixer({
-        browsers: ["last 2 versions"],
         cascade: false,
       })
     )
@@ -64,13 +90,14 @@ function change() {
   gulp.watch(routes.pug.watch, views);
   gulp.watch(routes.style.watch, styles);
 }
+/*
 function modify() {
-  return nodemon({ script: process.cwd() + "/src/init.js" });
+  return nodemon({ script: process.cwd() + "/src/static/init.js" });
 } //ignore 옵션 넣어주기
+*/
 
 export const build = gulp.series(
   clean,
-  gulp.series(scripts, views, styles),
-  modify,
+  gulp.parallel(scripts, views, styles),
   change
 );

@@ -1,14 +1,23 @@
-import { logInSocket } from "./sockets.js";
+import { login } from "../../src/controllers/userControllers.js";
+import { initSocket } from "./sockets.js";
 
-const NICKNAME = "";
-const nickname = (req, res) => {
-  NICKNAME = req.session.user.nickname;
+const body = document.querySelector("body");
+
+const {
+  nickname,
+} = (req, res) => {
+  req.session.user;
 };
 
 const logIn = (nickname) => {
   const socket = io();
   socket.emit("setNickname", { nickname });
-  logInSocket(socket);
+  initSocket(socket);
 };
 
-if (!nickname === null) logIn(nickname);
+if (nickname === null) {
+  body.className = "loggedOut";
+} else {
+  body.className = "loggedIn";
+  logIn(nickname);
+}

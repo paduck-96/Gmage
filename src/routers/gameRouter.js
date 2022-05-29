@@ -3,6 +3,6 @@ import { home } from "../controllers/gameControllers.js";
 
 const gameRouter = express.Router();
 
-gameRouter.get("/", home);
+gameRouter.get("/lobby", home);
 
 export default gameRouter;

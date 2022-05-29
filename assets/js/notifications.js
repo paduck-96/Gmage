@@ -1,17 +1,26 @@
-const notifications = document.getElementById("jsNotifications");
+const body = document.querySelector("body");
 
+//알림 보여주기 위한 칸 구성
 const fireNotification = (text, color) => {
   const notification = document.createElement("div");
-
   notification.innerHTML = text;
   notification.style.backgroundColor = color;
-  notifications.appendChild(notification);
+  notification.className = "notification";
+  body.appendChild(notification);
+};
+//어떤 알림?
+
+//새로운 유저 입장
+export const handleNewUser = ({ nickname }) => {
+  if (loggedInUser.nickname !== nickname) {
+    fireNotification(
+      ` 새로운 참여자 ${nickname}가 입장했습니다`,
+      "rgb(0,122,125)"
+    );
+  }
 };
 
-// 새로운 유저 유입알림
-export const handleNewUser = ({ nickname }) =>
-  fireNotification(`⭐   new user joined (${nickname})`, "rgb(0, 122, 255)");
-
-// 로그아웃된 유저 알림
-export const handleDisconnected = ({ nickname }) =>
-  fireNotification(`⚡   user left!! (${nickname})`, "rgb(255, 149, 0)");
+//유저 로그아웃
+export const handleDisconnected = ({ nickname }) => {
+  fireNotification(`${nickname}이 떠났습니다`, "rgb(255,149,0");
+};

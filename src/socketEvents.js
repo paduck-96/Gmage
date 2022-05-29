@@ -1,27 +1,12 @@
 //유저 저장
 //테스트 위해 임의 구현, DB에서 가져와야함
 let sockets = [];
-/*
-let rooms = [
-  {
-    inProgress:false,
-    roomName:"A",
-    roomLeader:null,
-    sockets:[]
-  },{
-    inProgress:false,
-    roomName : "B",
-    roomLeader:null,
-    sockets:[]
-  }
-]
+let rooms = [];
 
 let inProgress = false;
-*/
-
 let word = null;
 let leader = null;
-let timeout = null;
+let timeout = null; //시간 설정
 
 //시간 설정
 const times = {
@@ -80,7 +65,9 @@ const socketEvents = (socket, io) => {
         setRoom(roomName, roomType.UPDATE_PROGRESS, true);
         console.log("Room Info...", room);
         setRoom(roomName, roomType.SET_LEADER, chooseLeader(room.sockets));
-        //word = 사용자 입력할 수 있게 만들기
+        word = socket.on("setWord", {
+          word: word,
+        });
         //사용자 input 생성하기
         roomSocketEmit(roomName, "gameStarting");
         setTimeout(() => {
@@ -97,6 +84,7 @@ const socketEvents = (socket, io) => {
       }
     }
   };
+
   const endGame = (roomName) => {
     setRoom(roomName, roomType.UPDATE_PROGRESS, false);
     inProgress = false;

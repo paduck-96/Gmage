@@ -1,7 +1,11 @@
 "use strict";
 
-require("./login");
-
 require("./sockets");
 
-require("./notifications");
+require("./login");
+
+require("./chat");
+
+require("./paint");
+
+require("./room");
