@@ -11,6 +11,7 @@ let timeout = null; //시간 설정
 //시간 설정
 const times = {
   startTime: 5000,
+  wordTime: 5000,
   paintTime: 30000,
 };
 const roomType = {
@@ -52,6 +53,9 @@ const chooseLeader = (roomSockets) =>
   roomSockets[Math.floor(Math.random() * roomSockets.length)];
 
 const socketEvents = (socket, io) => {
+  //session & socket 연결
+  socket.user = socket.request.session.user;
+  io.emit("userLogin", socket.user);
   const broadcast = (event, data) => socket.broadcast.emit(event, data);
   const superBroadcast = (event, data) => io.emit(event, data);
   //특정 방에만 전달
@@ -63,22 +67,31 @@ const socketEvents = (socket, io) => {
     if (room.sockets.length > 1) {
       if (!room.inProgress) {
         setRoom(roomName, roomType.UPDATE_PROGRESS, true);
-        console.log("Room Info...", room);
         setRoom(roomName, roomType.SET_LEADER, chooseLeader(room.sockets));
-        word = socket.on("setWord", {
-          word: word,
-        });
+
         //사용자 input 생성하기
         roomSocketEmit(roomName, "gameStarting");
         setTimeout(() => {
           roomSocketEmit(roomName, "gameStarted");
-          io.to(room.roomLeader.id).emit("leaderNotif", { word });
-          // 게임 종료
-          timeout = setTimeout(() => {
-            //못 맞추면 점수 추가
-            addPoints(room.roomLeader.id, 5, roomName);
-            endGame(roomName);
-          }, times.paintTime);
+          io.to(room.roomLeader.id).emit("leaderNotif");
+          setTimeout(() => {
+            io.to(room.roomLeader.id).emit("writeWord");
+            socket.on("setWord", ({ word }) => {
+              const room = getRoom(socket.roomName);
+              room.answer = word;
+            });
+            setTimeout(() => {
+              io.to(room.roomLeader.id).emit("leaderTurn");
+              // 게임 종료
+              timeout = setTimeout(() => {
+                //못 맞추면 점수 추가
+                addPoints(room.roomLeader.id, 5, roomName);
+                endGame(roomName);
+              }, times.paintTime);
+              //단어 정하는 시간
+            }, times.wordTime);
+            //단어 입력 받는 시간
+          }, 1000);
           //게임 시작하는 타이밍
         }, times.startTime);
       }
@@ -109,11 +122,10 @@ const socketEvents = (socket, io) => {
   };
 
   //닉네임 설정
-  //User 모델에서 가져오기
-  //사실상 없는 이벤트로 카카오톡 로그인 data에서 가져와야함
-  socket.on("setNickname", ({ nickname }) => {
+  socket.on("setNickname", ({ nickname, avatar }) => {
     socket.nickname = nickname;
-    sockets.push({ id: socket.id, points: 0, nickname });
+    socket.avatar = avatar;
+    sockets.push({ id: socket.id, points: 0, nickname, avatar });
     superBroadcast("getRoomNames", rooms);
   });
 
@@ -124,7 +136,6 @@ const socketEvents = (socket, io) => {
     socket.join(roomName);
     // 새로 생성한 방이라면...
     if (rooms.filter((room) => room.roomName === roomName).length === 0) {
-      //db 모델 가져와서 적용시키기 (user 처럼)
       const newRoom = {
         inProgress: false,
         roomName: roomName,
@@ -134,19 +145,24 @@ const socketEvents = (socket, io) => {
       rooms.push(newRoom);
       superBroadcast("getRoomNames", rooms);
     }
+
     rooms = rooms.map((room) => {
       if (room.roomName === roomName) {
         room.sockets.push({
           id: socket.id,
           points: 0,
           nickname: socket.nickname,
+          avatar: socket.avatar,
         });
       }
       return room;
     });
     const room = getRoom(roomName);
     // 같은 방 인원들에게 알리기.
-    roomSocketEmit(roomName, "newUser", { nickname: socket.nickname });
+    roomSocketEmit(roomName, "newUser", {
+      nickname: socket.nickname,
+      rooms: rooms,
+    });
     roomSocketEmit(roomName, "playerUpdate", { sockets: room.sockets });
     startGame(socket.roomName);
   });
@@ -179,9 +195,10 @@ const socketEvents = (socket, io) => {
 
   // 메시지를 전송
   socket.on("sendMsg", ({ message }) => {
-    if (message === word) {
+    const room = getRoom(socket.roomName);
+    if (message === room.answer) {
       roomSocketEmit(socket.roomName, "newMsg", {
-        message: `🥇 Winner is ${socket.nickname}, word was: ${word}`,
+        message: `🥇 Winner is ${socket.nickname}, word was: ${room.answer}`,
         nickname: "😀 Bot",
       });
       addPoints(socket.id, 10, socket.roomName);

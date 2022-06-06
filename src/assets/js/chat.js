@@ -1,4 +1,4 @@
-import { getSocket } from "./sockets";
+import { getSocket } from "./sockets.js";
 
 const messages = document.getElementById("jsMessages");
 const sendMsg = document.getElementById("jsSendMsg");
@@ -23,7 +23,7 @@ const handleSendMsg = (event) => {
 };
 
 export const handleNewMessage = ({ message, nickname }) => {
-  if (loggedInUser.nickname !== nickname) {
+  if (getSocket().nickname !== nickname) {
     appendMsg(message, nickname);
   }
 };

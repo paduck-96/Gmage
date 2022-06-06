@@ -2,12 +2,33 @@
 html(lang="ko")
     head
         link(rel="icon" href="data:;base64,ivBORw0KGgo=")
-        link(rel="stylesheet" href="https://unpkg.com/mvp.css")
-        //link(rel="stylesheet" href="/styles/styles.css")
+        link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/sketchy/bootstrap.min.css", integrity="sha384-RxqHG2ilm4r6aFRpGmBbGTjsqwfqHOKy1ArsMhHusnRO47jcGqpIQqlQK/kmGy9R", crossorigin="anonymous")
+        link(rel="stylesheet" href="/css/styles.css")
         title #{pageTitle} | G-mage 
     body 
+        nav.navbar.navbar-expand-lg.navbar-light.bg-light
+            div.container-fluid
+                div.collapse.navbar-collapse#navbarColor03
+                    ul.navbar-nav.me-auto
+                        li.nav-item
+                            a(href="/").nav-link 홈
+                        if !loggedIn
+                            li.nav-link
+                                a(href="/login").nav-item#logIn 로그인
+                            li.nav-link 
+                                a(href="/signup").nav-item#signUp 회원가입
+                        else 
+                            li.nav-link
+                                a(href="/logout").nav-item 로그아웃
+                            li.nav-link
+                                a(href=`/users/${loggedInUser._id}`).nav-item
+                                    button.btn.btn-secondary.my-2.my-sm-0 #{loggedInUser.nickname} 프로필
+        if errorMessage
+            div.alert.alert-dismissible.alert-danger
+                button(type="button").btn-close
+                strong=errorMessage
         block content
         script(src="/socket.io/socket.io.js")
-        script(src="/js/main.js")
+        script(type="module" src="/js/main.js")
         script(src="https://developers.kakao.com/sdk/js/kakao.js")
     include partials/footer

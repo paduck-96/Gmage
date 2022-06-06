@@ -1,26 +1,27 @@
-import { getSocket } from "./sockets";
+import { getSocket } from "./sockets.js";
 
 // 생성된 룸들을 표시할 리스트
-const jsRooms = document.getElementById("jsRooms");
 const jsCreateRoom = document.getElementById("jsCreateRoom");
-const body = document.querySelector("body"); //안될수도 있음
+const jsRooms = document.getElementById("jsRooms");
+const body = document.querySelector("body");
+const quit = document.getElementById("quit");
 
 //접속 이벤트 전달
 const joinRoom = (roomName) => {
   getSocket().emit("joinGameRoom", { roomName });
   body.className = "enterRoom";
-  console.log(roomName);
 };
 
 //방 목록 추가
 export const appendRoomNames = (rooms) => {
   jsRooms.innerHTML = "";
   rooms.map((room) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <span>✅ Room: ${room.roomName}</span>
+    const span = document.createElement("span");
+    span.innerHTML = `
+      <span>✅ Room: ${room.roomName}  (${room.sockets.length})</span>
     `;
-    jsRooms.appendChild(li);
+    span.className = "roomList";
+    jsRooms.appendChild(span);
   });
 };
 
@@ -34,7 +35,14 @@ const handlecreateRoom = (e) => {
   input.value = "";
 };
 
+const handleQuit = () => {
+  leaveRoom;
+};
 //모든 방 제목 입력 창에
 if (jsCreateRoom) {
   jsCreateRoom.addEventListener("submit", handlecreateRoom);
+}
+
+if (quit) {
+  quit.addEventListener("click", handleQuit);
 }

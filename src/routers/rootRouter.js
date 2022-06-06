@@ -4,6 +4,9 @@ import {
   kakaoLogout,
   startKakaoLogin,
   finishKakaoLogin,
+  getSignup,
+  postSignup,
+  postLogin,
 } from "../controllers/userControllers.js";
 
 const rootRouter = express.Router();
@@ -11,8 +14,10 @@ const rootRouter = express.Router();
 rootRouter.get("/", (req, res) => {
   res.render("home");
 });
-rootRouter.get("/login", login);
+rootRouter.route("/login").get(login).post(postLogin);
 rootRouter.route("/login/start").get(startKakaoLogin);
 rootRouter.route("/login/finish").get(finishKakaoLogin);
 rootRouter.get("/logout", kakaoLogout);
+rootRouter.route("/signup").get(getSignup).post(postSignup);
+
 export default rootRouter;

@@ -1,13 +1,13 @@
-import { getSocket } from "./sockets";
+import { getSocket } from "./sockets.js";
 
+const canvas = document.getElementById("jsCanvas");
 const word = document.getElementById("jsWord");
 const answer = document.getElementById("jsAnswer");
-const canvas = document.getElementById("jsCanvas");
 const controls = document.getElementById("jsControls");
-const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jsColor");
 const mode = document.getElementById("jsMode");
 const lineWidth = document.getElementById("lineWidth");
+const ctx = canvas.getContext("2d");
 
 const INITIAL_COLOR = "#2c2c2c";
 const CANVAS_SIZE = 700;
@@ -30,12 +30,13 @@ const appendWord = (text) => {
   p.innerHTML = `<strong>${text}</strong>`;
   answer.appendChild(p);
 };
+
 //그리기 여부 적용
 function stopPainting() {
   painting = false;
 }
 function startPainting() {
-  painting = start;
+  painting = true;
 }
 
 //그리기 시작점 가져오기
@@ -70,14 +71,15 @@ function onMouseMove(event) {
 }
 
 //단어 입력 받기
-function handleWordSetting(event) {
+const handleWordSetting = (event) => {
   event.preventDefault();
   const input = word.querySelector("input");
   const { value } = input;
   getSocket().emit("setWord", { word: value });
   input.value = "";
+  hideWord();
   appendWord(value);
-}
+};
 
 //색상 변경
 function handleColorClick(event) {
@@ -143,9 +145,6 @@ if (mode) {
 if (lineWidth) {
   lineWidth.addEventListener("input", handleWidthChange);
 }
-if (word) {
-  word.addEventListener("submit", handleWordSetting);
-}
 
 //외부 socket에서 작용
 export const handleBeganPath = ({ x, y }) => beginPath(x, y);
@@ -172,19 +171,30 @@ export const hideControls = () => {
   controls.style.display = "none";
 };
 export const showControls = () => {
-  controls.style.display = "flex";
+  controls.style.display = "inline";
 };
 
 export const resetCanvas = () => fill("#fff");
+export const resetAnswer = () => {
+  const del = answer.querySelector("p");
+  del.remove();
+};
 
 export const hideWord = () => {
   word.style.display = "none";
+  const input = word.querySelector("input");
+  input.style.display = "none";
 };
 export const showWord = () => {
-  word.style.display = "flex";
+  word.style.display = "inline";
+  const input = word.querySelector("input");
+  input.style.display = "inline";
 };
 
 if (canvas) {
   canvas.addEventListener("contextmenu", handleCM);
   hideControls();
+}
+if (word) {
+  word.addEventListener("submit", handleWordSetting);
 }

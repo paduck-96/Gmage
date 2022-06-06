@@ -1,14 +1,16 @@
-import { handleNewUser, handleDisconnected } from "./notifications";
-import { handleNewMessage } from "./chat";
-import { handleBeganPath, handleStrokedPath, handleFilled } from "./paint";
+import { handleNewUser, handleDisconnected } from "./notifications.js";
+import { handleNewMessage } from "./chat.js";
+import { handleBeganPath, handleStrokedPath, handleFilled } from "./paint.js";
 import {
   handlePlayerUpdate,
   handleGameStarted,
   handleLeaderNotif,
   handleGameEnded,
   handleGameStarting,
-} from "./player";
-import { appendRoomNames } from "./room";
+  handleSetWord,
+  handleLeaderTurn,
+} from "./player.js";
+import { appendRoomNames } from "./room.js";
 
 let socket = null;
 
@@ -24,7 +26,9 @@ export const initSocket = (aSocket) => {
   socket.on("filled", handleFilled);
   socket.on("playerUpdate", handlePlayerUpdate);
   socket.on("gameStarted", handleGameStarted);
+  socket.on("writeWord", handleSetWord);
   socket.on("leaderNotif", handleLeaderNotif);
+  socket.on("leaderTurn", handleLeaderTurn);
   socket.on("gameEnded", handleGameEnded);
   socket.on("gameStarting", handleGameStarting);
   socket.on("getRoomNames", appendRoomNames);

@@ -14,22 +14,22 @@ const app = express();
 //pug 활용
 app.set("view engine", "pug");
 app.set("views", process.cwd() + "/src/views");
-
+export const sessionMiddleware = session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: mongoConnect.create({ mongoUrl: process.env.DB_URL }),
+});
 //express 설정
 //미들웨어 설정
 app.use(morgan("dev"));
-
+app.use(sessionMiddleware);
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: mongoConnect.create({ mongoUrl: process.env.DB_URL }),
-  })
-);
+
 app.use(localsMiddleware);
+app.use(express.static(process.cwd() + "/src/assets"));
 app.use(express.static(process.cwd() + "/src/static"));
+app.use(express.static(process.cwd() + "/src/models"));
 app.use("/", rootRouter);
 app.use("/game", gameRouter);
 app.use("/users", userRouter);
