@@ -14,7 +14,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var rootRouter = _express.default.Router();
 
 rootRouter.get("/", function (req, res) {
-  res.render("home");
+  res.render("index");
 });
 rootRouter.route("/login").get(_userControllers.login).post(_userControllers.postLogin);
 rootRouter.route("/login/start").get(_userControllers.startKakaoLogin);

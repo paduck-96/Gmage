@@ -395,21 +395,5 @@ var kakaoLogout = /*#__PURE__*/function () {
     return _ref4.apply(this, arguments);
   };
 }();
-/*
-export const kakaoExit = async (req, res) => {
-  req.session.destroy();
-  const baseUrl = "https://kapi.kakao.com/v1/user/unlink";
-  const Exist = await (
-    await fetch(baseUrl, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        "Content-type": "application/json",
-        property_keys: ["kakao_account.email"],
-      },
-    })
-  ).json();
-};
-*/
-
 
 exports.kakaoLogout = kakaoLogout;
