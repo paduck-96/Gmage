@@ -11,15 +11,20 @@ const joinRoom = (roomName) => {
   getSocket().emit("joinGameRoom", { roomName });
   body.className = "enterRoom";
 };
+const checkRoom = (roomName) => {};
 
 //방 목록 추가
 export const appendRoomNames = (rooms) => {
   jsRooms.innerHTML = "";
   rooms.map((room) => {
     const span = document.createElement("span");
-    span.innerHTML = `
+    room.sockets.length == 4
+      ? (span.innerHTML = `
+    <span>✅ Room: ${room.roomName}  (${room.sockets.length}) <span><strong>Full</strong></span> </span>
+  `)
+      : (span.innerHTML = `
       <span>✅ Room: ${room.roomName}  (${room.sockets.length})</span>
-    `;
+    `);
     span.className = "roomList";
     jsRooms.appendChild(span);
   });
@@ -31,6 +36,7 @@ const handlecreateRoom = (e) => {
   e.preventDefault();
   const input = jsCreateRoom.querySelector("input");
   const { value } = input;
+  checkRoom(value);
   joinRoom(value);
   input.value = "";
 };

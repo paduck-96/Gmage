@@ -3,6 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import mongoConnect from "connect-mongo";
 import session from "express-session";
+import flash from "express-flash";
 import rootRouter from "./routers/rootRouter.js";
 import userRouter from "./routers/userRouter.js";
 import gameRouter from "./routers/gameRouter.js";
@@ -25,7 +26,7 @@ export const sessionMiddleware = session({
 app.use(morgan("dev"));
 app.use(sessionMiddleware);
 app.use(express.urlencoded({ extended: true }));
-
+app.use(flash());
 app.use(localsMiddleware);
 app.use(express.static(process.cwd() + "/src/assets"));
 app.use(express.static(process.cwd() + "/src/static"));

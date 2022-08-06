@@ -1,4 +1,14 @@
 extends base
 block content 
-    h1 아바타 무료 제공 API 활용하기
-    h4 비밀번호 변경 추가하기
+    div.profileImg 
+        div 
+            img(src=`${loggedInUser.image_url}`, alt="profile_image")
+        div 
+            span #{loggedInUser.nickname}
+    div.profileScore
+    div.profileRank
+    div.profileBtn
+        a(href=`${loggedInUser._id}/edit`) 
+            button 정보 수정
+        a(href=`${loggedInUser._id}/password`) 
+            button 비밀번호 변경

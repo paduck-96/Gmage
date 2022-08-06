@@ -170,30 +170,92 @@ export const finishKakaoLogin = async (req, res) => {
   }
 };
 
-export const kakaoLogout = async (req, res) => {
+export const logout = async (req, res) => {
   req.session.destroy();
-  const baseUrl = "https://kauth.kakao.com/oauth/logout";
-  const options = {
-    client_id: process.env.CLIENT_ID,
-    logout_redirect_uri: "http://localhost:5000/",
-  };
-  const params = new URLSearchParams(options).toString();
-  const finalUrl = `${baseUrl}?${params}`;
-  return res.redirect(finalUrl);
+  io.once("logout", (socket) => {
+    socket.data.user = {};
+  });
+  return res.redirect("/");
 };
 
-/*
-export const kakaoExit = async (req, res) => {
-  req.session.destroy();
-  const baseUrl = "https://kapi.kakao.com/v1/user/unlink";
-  const Exist = await (
-    await fetch(baseUrl, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        "Content-type": "application/json",
-        property_keys: ["kakao_account.email"],
-      },
-    })
-  ).json();
+export const getEdit = (req, res) => {
+  return res.render("profile_edit", { pageTitle: "edit profile" });
 };
-*/
+const btn = document.getElementById("refresh");
+const img = document.getElementById("img");
+btn.addEventListener("click", () => {
+  img.src = `https://api.multiavatar.com/45678945/${Math.round(
+    Math.random() * 1000
+  )}.png`;
+});
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id, nickname: existNickname, image_url: existImage_url },
+    },
+    body: { nickname: updateNickname },
+  } = req;
+
+  const usedNickname = await User.exists({
+    nickname: updateNickname,
+  });
+  if (existNickname === updateNickname) {
+    return res.status(400).render("profile_edit", {
+      errorMessage: "동일한 닉네임입니다",
+    });
+  }
+  if (usedNickname) {
+    return res
+      .status(400)
+      .render("profile_edit", { errorMessage: "사용 중인 닉네임입니다" });
+  }
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    { nickname: updateNickname, image_url: img.src },
+    { new: true }
+  );
+  req.session.user = updatedUser;
+  io.once("update", (socket) => {
+    socket.data.user = req.session.user;
+  });
+  return res.redirect(`/users/${req.session.user._id}`);
+};
+
+export const getPassword = (req, res) => {
+  if (req.session.user.socialKakao === true) {
+    req.flash("error", "카카오 비밀번호는 여기서 변경할 수 없습니다");
+    return res.redirect("/users/:id");
+  }
+  return res.render("password", { pageTitle: "비밀번호 변경" });
+};
+
+export const postPassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, updatePassword, updatePasswordConfirm },
+  } = req;
+  const user = await User.findById(_id);
+  const ok = await bcrypt.compare(oldPassword, user.password);
+  if (ok) {
+    if (updatePassword !== updatePasswordConfirm) {
+      return res.status(400).render("password", {
+        errorMessage: "새 비밀번호가 일치하지 않습니다",
+        pageTitle: "change password",
+      });
+    }
+    user.password = updatePassword;
+    await user.save();
+    req.flash("info", "비밀번호 변경 완료!");
+    io.once("logout", (socket) => {
+      socket.data.user = req.session.user;
+    });
+    return res.redirect("/logout");
+  } else {
+    return res.status(400).render("password", {
+      errorMessage: "잘못된 비밀번호입니다",
+      pageTitle: "change password",
+    });
+  }
+};

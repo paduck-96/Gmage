@@ -15,17 +15,17 @@ const sass = gulpsass(scss);
 const routes = {
   js: {
     src: "src/**/**.js",
-    dest: "src/build/js",
+    dest: "build/js",
     watch: "assets/js/**/*.js",
   },
   style: {
     src: "assets/scss/styles.scss",
-    dest: "src/build/styles",
+    dest: "build/styles",
     watch: "assets/scss/**/*.scss",
   },
   pug: {
     src: "src/views/**/*.pug",
-    dest: "src/build/views",
+    dest: "build/views",
     watch: "src/views/**/*.pug",
   },
 };
@@ -89,8 +89,4 @@ function modify() {
 } //ignore 옵션 넣어주기
 */
 
-export const build = gulp.series(
-  clean,
-  gulp.parallel(scripts, views, styles),
-  change
-);
+export const build = gulp.series(clean, gulp.parallel(scripts, views, styles));

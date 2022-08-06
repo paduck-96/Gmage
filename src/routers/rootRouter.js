@@ -1,7 +1,7 @@
 import express from "express";
 import {
   login,
-  kakaoLogout,
+  logout,
   startKakaoLogin,
   finishKakaoLogin,
   getSignup,
@@ -12,12 +12,12 @@ import {
 const rootRouter = express.Router();
 
 rootRouter.get("/", (req, res) => {
-  res.render("home");
+  res.render("index");
 });
 rootRouter.route("/login").get(login).post(postLogin);
 rootRouter.route("/login/start").get(startKakaoLogin);
 rootRouter.route("/login/finish").get(finishKakaoLogin);
-rootRouter.get("/logout", kakaoLogout);
+rootRouter.route("/logout").get(logout);
 rootRouter.route("/signup").get(getSignup).post(postSignup);
 
 export default rootRouter;

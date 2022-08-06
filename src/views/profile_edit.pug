@@ -1,0 +1,13 @@
+extends base
+block content
+    div.profileImg 
+        div 
+            img(src=`${loggedInUser.image_url}`, alt="profile_image")
+        div 
+            span #{loggedInUser.nickname}
+    form(method="POST")
+        label(for="img") 프로필 이미지
+        input(type="image" id="img" name="img" alt="프로필 이미지" src=loggedInUser.image_url width=300 height=300)
+        input(type="button" id="refresh" value="새로고침" )
+        input(name="nickname" type="text" required value=loggedInUser.nickname)
+        input(type="submit" value="수정 완료")
