@@ -7,11 +7,13 @@ let inProgress = false;
 let word = null;
 let leader = null;
 let timeout = null; //시간 설정
+let newPoints = {}; // 아이템 활용 위한 점수 조건
 
 //시간 설정
 const times = {
   startTime: 5000,
-  wordTime: 5000,
+  itemTime: 7000,
+  wordTime: 10000,
   paintTime: 30000,
 };
 const roomType = {
@@ -72,26 +74,33 @@ const socketEvents = (socket, io) => {
         //사용자 input 생성하기
         roomSocketEmit(roomName, "gameStarting");
         setTimeout(() => {
+          ``;
           roomSocketEmit(roomName, "gameStarted");
-          io.to(room.roomLeader.id).emit("leaderNotif");
+          roomSocketEmit(roomName, "itemUsed");
           setTimeout(() => {
-            io.to(room.roomLeader.id).emit("writeWord");
-            socket.on("setWord", ({ word }) => {
-              const room = getRoom(socket.roomName);
-              room.answer = word;
-            });
+            io.to(room.roomLeader.id).emit("leaderNotif");
             setTimeout(() => {
-              io.to(room.roomLeader.id).emit("leaderTurn");
-              // 게임 종료
-              timeout = setTimeout(() => {
-                //못 맞추면 점수 추가
-                addPoints(room.roomLeader.id, 5, roomName);
-                endGame(roomName);
-              }, times.paintTime);
-              //단어 정하는 시간
-            }, times.wordTime);
-            //단어 입력 받는 시간
-          }, 1000);
+              io.to(room.roomLeader.id).emit("writeWord");
+              socket.on("setWord", ({ word }) => {
+                const room = getRoom(socket.roomName);
+                room.answer = word;
+              });
+              setTimeout(() => {
+                io.to(room.roomLeader.id).emit("leaderTurn");
+                // 게임 종료
+                timeout = setTimeout(() => {
+                  //못 맞추면 점수 추가
+                  addPoints(room.roomLeader.id, 5, roomName);
+                  addItems(roomName);
+                  endGame(roomName);
+                  //그림 그리는 시간
+                }, times.paintTime);
+                //단어 정하는 시간
+              }, times.wordTime);
+              //다음 단계 대기
+            }, 1000);
+            //아이템 사용 타이밍
+          }, times.itemTime);
           //게임 시작하는 타이밍
         }, times.startTime);
       }
@@ -108,6 +117,7 @@ const socketEvents = (socket, io) => {
     //게임 재시작
     setTimeout(() => startGame(roomName), times.startTime);
   };
+  //점수 추가
   const addPoints = (id, point, roomName) => {
     const room = getRoom(roomName);
     room.sockets = room.sockets.map((socket) => {
@@ -117,15 +127,43 @@ const socketEvents = (socket, io) => {
       return socket;
     });
     roomSocketEmit(roomName, "playerUpdate", { sockets: room.sockets });
+  };
+  //아이템 추가
+  const addItems = (roomName) => {
+    const room = getRoom(roomName);
+    room.sockets.map((socket) => {
+      newPoints[socket.id] = socket.points;
+      return newPoints;
+    });
+    let arr = Object.values(newPoints);
+    let min = Math.min(...arr);
+    if (min) {
+      const leastPlayer = Object.keys(newPoints).find(
+        (key) => newPoints[key] === min
+      );
+      for (let i = 0; i < room.sockets.length; i++) {
+        if (room.sockets[i].id == leastPlayer) {
+          if (room.sockets[i].item === undefined) {
+            room.sockets[i].item = "독점권" || "강제종료";
+          }
+        }
+      }
+    }
+    roomSocketEmit(roomName, "playerUpdate", { sockets: room.sockets });
     endGame(roomName);
     clearTimeout(timeout);
   };
-
   //닉네임 설정
   socket.on("setNickname", ({ nickname, avatar }) => {
     socket.nickname = nickname;
     socket.avatar = avatar;
-    sockets.push({ id: socket.id, points: 0, nickname, avatar });
+    sockets.push({
+      id: socket.id,
+      points: 0,
+      nickname,
+      avatar,
+      item: socket.item,
+    });
     superBroadcast("getRoomNames", rooms);
   });
 
@@ -153,6 +191,7 @@ const socketEvents = (socket, io) => {
           points: 0,
           nickname: socket.nickname,
           avatar: socket.avatar,
+          item: socket.item,
         });
       }
       return room;

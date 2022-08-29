@@ -1,0 +1,32 @@
+.editBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  label {
+    font-size: 38px;
+  }
+  .proImg {
+    width: 250px;
+    height: 250px;
+  }
+  .proImg,
+  .reload {
+    margin-top: 15px;
+  }
+  .reload {
+    margin-bottom: 50px;
+  }
+  .nickname {
+    color: gray;
+  }
+  .nickname {
+    margin: 15px 0px 4px;
+  }
+}

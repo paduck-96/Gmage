@@ -1,11 +1,12 @@
 .chat {
-  height: 75vh;
-  width: 30vw;
+  white-space: normal;
+  overflow: hidden;
   .chat__messages {
     height: 95%;
-    width: 120%;
-    margin-bottom: 5px;
+    width: 100%;
+    margin-bottom: 3px;
     padding: 20px 10px;
+    word-wrap: break-word;
     overflow: scroll;
     background-color: white;
     border-radius: 10px;
@@ -24,9 +25,9 @@
     }
   }
   .chat__form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 83%;
+    position: relative;
+    left: -25px;
     input {
       height: 30px;
       width: 120%;

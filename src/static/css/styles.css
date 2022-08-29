@@ -220,14 +220,15 @@ table {
 }
 
 .chat {
-  height: 75vh;
-  width: 30vw;
+  white-space: normal;
+  overflow: hidden;
 }
 .chat .chat__messages {
   height: 95%;
-  width: 120%;
-  margin-bottom: 5px;
+  width: 100%;
+  margin-bottom: 3px;
   padding: 20px 10px;
+  word-wrap: break-word;
   overflow: scroll;
   background-color: white;
   border-radius: 10px;
@@ -246,9 +247,9 @@ table {
   color: rgb(255, 149, 0);
 }
 .chat .chat__form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 85%;
+  position: relative;
+  left: -30px;
 }
 .chat .chat__form input {
   height: 30px;
@@ -261,29 +262,25 @@ table {
 
 .gameContainer {
   display: flex;
-  width: 90%;
   margin: 0 auto;
   justify-content: center;
   flex-wrap: wrap;
 }
-.gameContainer .canvasContainer {
-  margin-right: 15px;
-}
 .gameContainer .canvas,
 .gameContainer .chatMessages {
   background-color: white;
-  height: 80vh;
-  border-radius: 10px;
+  border-radius: 15px;
   box-shadow: 0 3px 36px rgba(23, 55, 87, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
 }
 .gameContainer .main #jsCanvas {
-  width: 700px;
-  height: 700px;
+  width: 100%;
+  height: 100%;
 }
 .gameContainer .main .gameDisplay {
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 70vh;
+  grid-template-columns: 150px 2.5fr 1fr;
+  column-gap: 10px;
 }
 .gameContainer .main .controls {
   margin-top: 25px;
@@ -362,11 +359,6 @@ table {
   }
 }
 */
-.player__board {
-  margin-right: 15px;
-  width: 35%;
-  height: 75vh;
-}
 .player__board span {
   box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
   background-color: white;
@@ -382,19 +374,18 @@ table {
   margin-right: 0;
 }
 .player__board div {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(4, 1fr);
   width: 100%;
   height: 150px;
   background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  margin-bottom: 50px;
 }
 
 .mainBox {
   display: flex;
   flex-direction: column;
   height: 90vh;
-  width: 90vw;
   justify-content: flex-start;
   align-items: center;
 }
@@ -469,6 +460,106 @@ table {
   width: 20vw;
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.profileImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+.profileImg .imgBox {
+  text-align: center;
+  margin-bottom: 25px;
+}
+.profileImg img {
+  width: 50%;
+  height: 50%;
+}
+.profileImg span {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.profileBoard {
+  display: flex;
+  margin-bottom: 30px;
+  min-height: 20%;
+  max-height: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profileBoard div {
+  margin: 0 auto;
+}
+
+.profileBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profileBtn div {
+  width: 1%;
+  height: 100%;
+}
+.profileBtn a button {
+  border-radius: 10%;
+  font-size: 18px;
+}
+
+.editBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.editBox form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.editBox label {
+  font-size: 38px;
+}
+.editBox .proImg {
+  width: 250px;
+  height: 250px;
+}
+.editBox .proImg,
+.editBox .reload {
+  margin-top: 15px;
+}
+.editBox .reload {
+  margin-bottom: 50px;
+}
+.editBox .nickname {
+  color: gray;
+}
+.editBox .nickname {
+  margin: 15px 0px 4px;
+}
+
+.password {
+  position: absolute;
+  bottom: 350px;
+  left: 625px;
+}
+.password form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.password form input {
+  margin-bottom: 22px;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -481,7 +572,9 @@ button :focus {
 }
 
 html {
-  height: 100%;
+  height: 80%;
+  margin: 0 auto;
+  width: 70%;
 }
 
 body {
@@ -493,6 +586,11 @@ body {
 body .loginBox,
 body .jsRooms,
 body .gameContainer {
+  display: none;
+}
+body .loginBox .wordSpace,
+body .jsRooms .wordSpace,
+body .gameContainer .wordSpace {
   display: none;
 }
 body.loggedOut .loginBox {
@@ -508,8 +606,9 @@ body.enterRoom .gameContainer {
   display: flex;
 }
 body footer {
-  margin-top: 100px;
-  text-align: right;
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
 }
 
 nav {
@@ -519,6 +618,15 @@ nav {
 }
 nav a {
   text-decoration: none;
+}
+nav img {
+  width: 30px;
+  height: 30px;
+  border-radius: 25%;
+}
+nav .nav-link-logout {
+  position: absolute;
+  right: 50px;
 }
 
 /*# sourceMappingURL=styles.css.map */

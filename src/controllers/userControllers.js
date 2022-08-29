@@ -181,19 +181,13 @@ export const logout = async (req, res) => {
 export const getEdit = (req, res) => {
   return res.render("profile_edit", { pageTitle: "edit profile" });
 };
-const btn = document.getElementById("refresh");
-const img = document.getElementById("img");
-btn.addEventListener("click", () => {
-  img.src = `https://api.multiavatar.com/45678945/${Math.round(
-    Math.random() * 1000
-  )}.png`;
-});
 export const postEdit = async (req, res) => {
   const {
     session: {
       user: { _id, nickname: existNickname, image_url: existImage_url },
     },
     body: { nickname: updateNickname },
+    img,
   } = req;
 
   const usedNickname = await User.exists({

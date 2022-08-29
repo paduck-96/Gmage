@@ -20,19 +20,18 @@ html(lang="ko")
                         else 
                             li.nav-link
                                 a(href=`/users/${loggedInUser._id}`).nav-item
-                                    button.btn.btn-secondary.my-2.my-sm-0
                                         img(src=`${loggedInUser.image_url}`)
-                            li.nav-link
+                            li.nav-link.nav-link-logout
                                 a(href="/logout").nav-item 로그아웃
         if errorMessage
             div.alert.alert-dismissible.alert-danger
                 button(type="button").btn-close
                 strong=errorMessage
-        if messages.error
+        //if messages.error
             +messages("error", messages.error)
-        if messages.info
+        //if messages.info
             +messages("info", messages.info)
-        if messages.success
+        //if messages.success
             +messages("success", messages.success)
         block content
         script(src="/socket.io/socket.io.js")

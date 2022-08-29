@@ -1,7 +1,8 @@
 import { getSocket } from "./sockets.js";
 
 const canvas = document.getElementById("jsCanvas");
-const word = document.getElementById("jsWord");
+const word = document.getElementsByClassName("wordSpace");
+//const wordSet = word.querySelector("input");
 const answer = document.getElementById("jsAnswer");
 const controls = document.getElementById("jsControls");
 const colors = document.getElementsByClassName("jsColor");
@@ -10,7 +11,7 @@ const lineWidth = document.getElementById("lineWidth");
 const ctx = canvas.getContext("2d");
 
 const INITIAL_COLOR = "#2c2c2c";
-const CANVAS_SIZE = 700;
+const CANVAS_SIZE = 400;
 const LINE_WIDTH = 2.5;
 
 canvas.width = CANVAS_SIZE;
@@ -176,19 +177,17 @@ export const showControls = () => {
 
 export const resetCanvas = () => fill("#fff");
 export const resetAnswer = () => {
-  const del = answer.querySelector("p");
-  del.remove();
+  if (del) {
+    const del = answer.querySelector("p");
+    del.remove();
+  }
 };
 
 export const hideWord = () => {
   word.style.display = "none";
-  const input = word.querySelector("input");
-  input.style.display = "none";
 };
 export const showWord = () => {
   word.style.display = "inline";
-  const input = word.querySelector("input");
-  input.style.display = "inline";
 };
 
 if (canvas) {
@@ -196,5 +195,5 @@ if (canvas) {
   hideControls();
 }
 if (word) {
-  word.addEventListener("submit", handleWordSetting);
+  //wordSet.addEventListener("submit", handleWordSetting);
 }

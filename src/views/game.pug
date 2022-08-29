@@ -3,11 +3,8 @@ block content
     div.userInfo
         if loggedInUser
             div
-                h6 #{loggedInUser.nickname} 님 반갑습니다!
-    div 
-        //if !loggedInUser.image_url
-            span 원활한 게임을 위해 프로필을 설정해주세요  
-            a(href="/signUp") 바로가기 &rarr;
+                h6 #{loggedInUser.nickname} (사용자) 상황에 따른 메시지 출력
+    div
     .jsRooms
         div.form-group
             div.form-floating.mb-3
@@ -19,8 +16,9 @@ block content
         .main    
             #jsNotifs
             #jsAnswer
-            form.word__form#jsWord
-                input(type="text", placeholder="정답은...")
+            .wordSpace
+                form.word__form#jsWord
+                    input(type="text", placeholder="정답은...")
             div.gameDisplay
                 .player__board#jsBoard
                 div.canvasContainer

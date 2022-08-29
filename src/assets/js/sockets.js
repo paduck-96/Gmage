@@ -9,6 +9,7 @@ import {
   handleGameStarting,
   handleSetWord,
   handleLeaderTurn,
+  handleItemUsed,
 } from "./player.js";
 import { appendRoomNames } from "./room.js";
 
@@ -32,4 +33,5 @@ export const initSocket = (aSocket) => {
   socket.on("gameEnded", handleGameEnded);
   socket.on("gameStarting", handleGameStarting);
   socket.on("getRoomNames", appendRoomNames);
+  socket.on("itemUsed", handleItemUsed);
 };

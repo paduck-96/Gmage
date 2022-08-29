@@ -1,14 +1,19 @@
 extends base
 block content 
-    div.profileImg 
-        div 
-            img(src=`${loggedInUser.image_url}`, alt="profile_image")
-        div 
-            span #{loggedInUser.nickname}
-    div.profileScore
-    div.profileRank
-    div.profileBtn
-        a(href=`${loggedInUser._id}/edit`) 
-            button 정보 수정
-        a(href=`${loggedInUser._id}/password`) 
-            button 비밀번호 변경
+    if loggedIn
+        div.profileImg 
+            div.imgBox
+                img(src=`${loggedInUser.image_url}`, alt="profile_image")
+            div 
+                span #{loggedInUser.nickname}
+        div.profileBoard
+            div.profileScore
+                p 이용자들의 점수(경험치/레벨)가 집계 될 예정입니다
+            div.profileRank
+                p 이용자들의 순위가 집계 될 예정입니다
+        div.profileBtn
+            a(href=`${loggedInUser._id}/edit`) 
+                button.btn.btn-secondary.my-2.my-sm-0 정보 수정
+            div
+            a(href=`${loggedInUser._id}/password`) 
+                button.btn.btn-secondary.my-2.my-sm-0 비밀번호 변경
