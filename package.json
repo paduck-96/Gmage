@@ -9,7 +9,7 @@
     "build:assets": "gulp build",
     "build:css": "sass src/assets/scss/styles.scss src/static/css/styles.css",
     "build": "npm run build:css && babel src -d build",
-    "start": "npm run build:css && node src/init.js",
+    "start": "npm rebuild node-sass && npm run build:css && node src/init.js",
     "predeploy": "npm run build:assets",
     "deploy": "gh-pages -d build"
   },
