@@ -247,9 +247,9 @@ table {
   color: rgb(255, 149, 0);
 }
 .chat .chat__form {
-  width: 85%;
+  width: 83%;
   position: relative;
-  left: -30px;
+  left: -25px;
 }
 .chat .chat__form input {
   height: 30px;
